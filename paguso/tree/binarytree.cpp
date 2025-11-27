@@ -15,7 +15,9 @@ Node<int>* buildExampleBT() {
     // folhas
     Node<int>* n3 = new Node<int>(3);
     Node<int>* n7 = new Node<int>(7);
-    Node<int>* n13 = new Node<int>(13);
+    Node<int>* n15 = new Node<int>(15);
+
+    Node<int>* n13 = new Node<int>(13, nullptr, n15);
 
     // nós intermediários
     Node<int>* n5 = new Node<int>(5, n3, n7);
@@ -27,12 +29,55 @@ Node<int>* buildExampleBT() {
     return n9;
 }
 
-void preorder(Node<int>* root) {
+void visit(Node<int>* root, int level = 0) {
+    for (int i = 0; i < level; i++) cout << "    ";
+    cout << root->val << endl;
+}
+
+void preOrder(Node<int>* root, int level = 0) {
     if (root == nullptr) return;
 
-    cout << root->val << endl;
-    preorder(root->left);
-    preorder(root->right);
+    visit(root, level);
+    preOrder(root->left, level+1);
+    preOrder(root->right, level+1);
+}
+
+void postOrder(Node<int>* root, int level = 0) {
+    if (root == nullptr) return;
+    
+    postOrder(root->left, level+1);
+    postOrder(root->right, level+1);
+    visit(root, level);
+}
+
+void inOrder(Node<int>* root, int level = 0) {
+    if (root == nullptr) return;
+    
+    inOrder(root->left, level+1);
+    visit(root, level);
+    inOrder(root->right, level+1);    
+}
+
+int height(Node<int>* root) {
+    if (root == nullptr) return 0;
+
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
+
+    return 1 + max(leftHeight, rightHeight);
+}
+
+// diâmetro da árvore (maior distância em aresta entre nós de uma árvore)
+    // TA ERRADO MELHORAR ISSO.
+int diameter(Node<int>* root, int diameter = 0) {
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
+
+    if (leftHeight + rightHeight > leftHeight * 2 || leftHeight + rightHeight > rightHeight * 2) {
+        return leftHeight + rightHeight;
+    } else {
+        return(2*max(leftHeight, rightHeight));
+    }
 }
 
 int countnodes(Node<int>* root) {
@@ -41,22 +86,29 @@ int countnodes(Node<int>* root) {
     return 1 + countnodes(root->left) + countnodes(root->right);
 }
 
+
 int main() {
 
     Node<int>* root = buildExampleBT();
-    preorder(root);
-    cout << "\nThere are " << countnodes(root) << " nodes in this tree" << endl; // expected: 6
+    cout << "[PRE] \n";
+    preOrder(root);
 
-    /*
-    9
-        5
-            3
-            7
-        11
-            -
-            13
-    
-    */
+    cout << "\n\n";
+
+    cout << "[POS] \n";
+    postOrder(root);
+
+    cout << "\n\n";
+
+    cout << "[IN] \n";
+    inOrder(root);
+
+    cout << "\n\n";
+
+    cout << "\nThere are " << countnodes(root) << " nodes in this tree" << endl; // expected: 6
+    cout << "The height of this tree is " << height(root) << endl;
+
+    cout << "The diameter of this tree is " << diameter(root) << endl;
 
     return 0;
 }
