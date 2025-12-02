@@ -3,9 +3,9 @@
 
 using namespace std;
 
-template <typename T>
 class NTree {
 private:
+    template <typename T>
     struct Node {
         T val;
         Node* firstChild;
@@ -48,38 +48,38 @@ private:
 
 public:
 
-    Node* root;
+    Node<int>* root;
 
     NTree() {
-        root = new Node{0, nullptr, nullptr};
+        root = new Node<int>{0, nullptr, nullptr};
         root->addChd(1);
         root->addChd(2);
 
-        Node* n1 = root->chld(0);
+        Node<int>* n1 = root->chld(0);
         n1->addChd(3);
         n1->addChd(4);
         n1->addChd(5);
 
-        Node* n2 = root->chld(1);
+        Node<int>* n2 = root->chld(1);
         n2->addChd(6);
     }
 
     // percurso em profundidade (Depth-First Search - DFS)
     void print() {
-        if (root) root->printNode;
+        if (root) root->printNode();
     }
 
     // percurso em largura (Breadth-First Search - BFS)
     void bfs() {
-        queue<Node*> q;
+        queue<Node<int>*> q;
         if (root) q.push(root);
 
         // coloca a raiz na fila, tira da fila, imprime o valor e coloca todos os filhos na fila enquanto a fila não estiver vazia
         while (q.size()) {
-            Node* n = q.front();
+            Node<int>* n = q.front();
             q.pop();
             cout << n->val << " ";
-            for (Node* cur = n->firstChild; cur; cur = cur->sibiling) {
+            for (Node<int>* cur = n->firstChild; cur; cur = cur->sibiling) {
                 q.push(cur);
             }
         }
@@ -90,9 +90,12 @@ public:
 
 
 int main() {
-    NTree<int> t;
+    NTree t;
+
+    cout << "Depth-First Search:\n";
     t.print();
 
+    cout << "\n\nBreadth-First Search: ";
     t.bfs();
 
     return 0;
