@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -68,16 +69,16 @@ int height(Node<int>* root) {
 }
 
 // diâmetro da árvore (maior distância em aresta entre nós de uma árvore)
-    // TA ERRADO MELHORAR ISSO.
-int diameter(Node<int>* root, int diameter = 0) {
+int diameter(Node<int>* root) {
+    if (root == nullptr) return 0;
+
     int leftHeight = height(root->left);
     int rightHeight = height(root->right);
 
-    if (leftHeight + rightHeight > leftHeight * 2 || leftHeight + rightHeight > rightHeight * 2) {
-        return leftHeight + rightHeight;
-    } else {
-        return(2*max(leftHeight, rightHeight));
-    }
+    int leftDiameter = diameter(root->left);
+    int rightDiameter = diameter(root->right);
+
+    return max({leftHeight+rightHeight, leftDiameter, rightDiameter});
 }
 
 int countnodes(Node<int>* root) {
